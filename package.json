@@ -1,0 +1,14 @@
+{
+  "name": "booking-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:simonhildebrandt/booking-app.git",
+  "author": "Simon Hildebrandt <simonhildebrandt@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "ngrok": "ngrok http 80"
+  },
+  "dependencies": {
+    "@slack/bolt": "^3.12.2"
+  }
+}
