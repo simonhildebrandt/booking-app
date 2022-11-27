@@ -6,9 +6,11 @@
   "author": "Simon Hildebrandt <simonhildebrandt@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "ngrok": "ngrok http 80"
+    "ngrok": "ngrok http 5001",
+    "emulator": "firebase emulators:start"
   },
   "dependencies": {
-    "@slack/bolt": "^3.12.2"
+    "firebase": "^9.14.0",
+    "firebase-tools": "^11.16.0"
   }
 }
