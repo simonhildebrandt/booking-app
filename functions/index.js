@@ -4,6 +4,7 @@ const functions = require("firebase-functions");
 const config = functions.config();
 
 const {
+  storeTeam,
   ensureTeam,
   getResources,
   getResource,
@@ -26,14 +27,42 @@ const APPNAME = "Tesorau";
 
 const expressReceiver = new ExpressReceiver({
   signingSecret: config.slack.signing_secret,
+  stateSecret: 'tesoro-secret',
+  clientId: config.slack.client_id,
+  clientSecret: config.slack.client_secret,
+  scopes: ['channels:history', 'channels:manage', 'chat:write'],
   endpoints: '/events',
-  processBeforeResponse: true
+  processBeforeResponse: true,
+  installer: {}
 });
 
 const app = new App({
   receiver: expressReceiver,
-  token: config.slack.bot_token,
+  // token: config.slack.bot_token,
   processBeforeResponse: true,
+  installerOptions: {
+    directInstall: true
+  },
+  scopes: ['channels:history', 'channels:manage', 'chat:write'],
+  installationStore: {
+    storeInstallation: async (installation) => {
+      console.log('storing installation!', installation);
+      if (installation.team !== undefined) {
+        return await storeTeam(installation.team.id)
+      } else {
+        throw new Error('Only team-based installs supported');
+      }
+    },
+    fetchInstallation: async (installQuery) => {
+      if (installQuery.teamId !== undefined) {
+        return await ensureTeam(installQuery.teamId);
+      }
+      throw new Error('Failed fetching installation');
+    },
+    deleteInstallation: async (installQuery) => {
+      console.log('deleting installation', installQuery);
+    },
+  }
 });
 
 

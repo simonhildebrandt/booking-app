@@ -1,6 +1,5 @@
 const { initializeApp } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
-const { datetimeString } = require('firebase-tools/lib/utils');
 
 initializeApp();
 const db = getFirestore();
@@ -11,6 +10,13 @@ class ResourceNotFoundError extends Error {}
 class BookingNotFoundError extends Error {}
 
 
+async function storeTeam(teamId) {
+  const doc = db.collection('teams').doc(teamId);
+  doc.set({
+    createdAt: new Date().valueOf(),
+    publishingChannel: null
+  });
+}
 
 async function ensureTeam(teamId) {
   const doc = db.collection('teams').doc(teamId);
@@ -18,12 +24,7 @@ async function ensureTeam(teamId) {
   if (existing.exists) {
     return existing.data();
   } else {
-    const data = {
-      createdAt: new Date().valueOf(),
-      publishingChannel: null
-    };
-    await doc.set(data);
-    return data;
+    throw new TeamNotFoundError();
   }
 }
 
@@ -125,6 +126,7 @@ async function resolveActiveBooking(teamId, resource) {
 }
 
 module.exports = {
+  storeTeam,
   ensureTeam,
   createResource,
   getResources,

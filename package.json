@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "ngrok": "ngrok http 5001",
-    "emulator": "firebase emulators:start"
+    "emulator": "firebase emulators:start",
+    "deploy_functions": "firebase deploy --only functions"
   },
   "dependencies": {
     "firebase": "^9.14.0",
